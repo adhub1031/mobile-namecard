@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Alice | Digital Namecard",
-  description: "모바일 명함 랜딩페이지",
+  title: "Alice | Software Engineer",
+  description: "풀스택 개발자 Alice의 디지털 명함",
 };
 
 export const viewport: Viewport = {
@@ -18,7 +18,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white antialiased">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body
+        className="min-h-screen bg-dark-900 text-white antialiased"
+        style={{ fontFamily: "'Inter', sans-serif" }}
+      >
         {children}
       </body>
     </html>

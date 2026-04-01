@@ -1,7 +1,13 @@
-import Image from "next/image";
+"use client";
 
-/* ─── 스타트업 대표 — 미니멀 화이트 클린 ─── */
-const P = {
+import { useState } from "react";
+import Image from "next/image";
+import type { Profile } from "@/types/profile";
+
+const FALLBACK_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' fill='%23e2e8f0'%3E%3Crect width='200' height='200'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='64' fill='%2394a3b8'%3E?%3C/text%3E%3C/svg%3E";
+
+/* ─── 스타트업 대표 — Magazine Editorial ─── */
+const P: Profile = {
   name: "이정우",
   nameEn: "Jungwoo Lee",
   title: "CEO & Co-Founder",
@@ -33,106 +39,164 @@ const P = {
   ],
 };
 
+const serif = "'Playfair Display', serif";
+
 export default function CeoPage() {
+  const [imgSrc, setImgSrc] = useState(P.image!);
+
   return (
     <main className="min-h-screen bg-[#fafafa] text-slate-900">
-      <div className="mx-auto max-w-lg px-5 pb-20 pt-10">
-        {/* Hero */}
-        <section className="mb-10 text-center animate-fade-up">
-          <div className="relative mx-auto mb-6 size-28">
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-slate-300 to-slate-100 blur-sm" />
-            <div className="relative size-28 overflow-hidden rounded-full ring-1 ring-slate-200">
-              <Image src={P.image} alt={P.name} fill className="object-cover" priority />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">{P.name}</h1>
-          <p className="text-xs text-slate-400">{P.nameEn}</p>
-          <div className="mt-3 flex items-center justify-center gap-2">
-            <span className="rounded-md bg-slate-900 px-3 py-1 text-[10px] font-semibold text-white">{P.title}</span>
-            <span className="text-xs text-slate-400">{P.company}</span>
-          </div>
-          <p className="mx-auto mt-4 max-w-xs text-sm text-slate-500">{P.tagline}</p>
-        </section>
+      <div className="mx-auto max-w-lg px-5 pb-20 pt-14">
 
-        {/* Stats */}
-        <section className="mb-10 grid grid-cols-3 gap-3 animate-fade-up-delay-1">
-          {P.stats.map((s) => (
-            <div key={s.label} className="rounded-xl border border-slate-200 bg-white p-4 text-center shadow-sm">
-              <p className="text-xl font-bold text-slate-900">{s.value}</p>
-              <p className="mt-1 text-[10px] uppercase tracking-widest text-slate-400">{s.label}</p>
+        {/* ── Hero: Large serif name ── */}
+        <header className="mb-12">
+          <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-slate-400">
+            {P.company} &mdash; {P.title}
+          </p>
+          <h1
+            className="mt-3 text-5xl font-bold leading-[1.1] text-slate-900"
+            style={{ fontFamily: serif }}
+          >
+            {P.name}
+          </h1>
+          <p
+            className="mt-1 text-lg font-semibold text-slate-400"
+            style={{ fontFamily: serif }}
+          >
+            {P.nameEn}
+          </p>
+          <p className="mt-5 text-sm leading-relaxed text-slate-500 max-w-sm">
+            {P.tagline}
+          </p>
+
+          {/* Profile image — editorial offset */}
+          <div className="mt-8 flex items-start gap-5">
+            <div className="relative size-20 shrink-0 overflow-hidden rounded-sm grayscale">
+              <Image src={imgSrc} alt={P.name} fill sizes="(max-width: 640px) 100vw, 50vw" className="object-cover" priority onError={() => setImgSrc(FALLBACK_IMAGE)} />
+            </div>
+            <p className="text-sm leading-relaxed text-slate-600 pt-1">
+              {P.bio}
+            </p>
+          </div>
+        </header>
+
+        {/* ── Divider ── */}
+        <div className="h-px bg-slate-300" />
+
+        {/* ── Stats: Inline horizontal ── */}
+        <section className="flex items-baseline justify-between py-6">
+          {P.stats.map((s, i) => (
+            <div key={s.label} className="flex items-baseline gap-2">
+              <span
+                className="text-2xl font-bold text-slate-900"
+                style={{ fontFamily: serif }}
+              >
+                {s.value}
+              </span>
+              <span className="text-[10px] uppercase tracking-widest text-slate-400">
+                {s.label}
+              </span>
+              {i < P.stats.length - 1 && (
+                <span className="ml-4 text-slate-300 select-none">/</span>
+              )}
             </div>
           ))}
         </section>
 
-        {/* About */}
-        <section className="mb-10 animate-fade-up-delay-2">
-          <SectionTitle>About</SectionTitle>
-          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-sm leading-relaxed text-slate-600">{P.bio}</p>
-          </div>
-        </section>
+        {/* ── Divider ── */}
+        <div className="h-px bg-slate-300" />
 
-        {/* Values */}
-        <section className="mb-10 animate-fade-up-delay-3">
-          <SectionTitle>Expertise</SectionTitle>
-          <div className="grid grid-cols-2 gap-3">
-            {P.values.map((v) => (
-              <div key={v.title} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h3 className="text-sm font-semibold text-slate-900">{v.title}</h3>
-                <p className="mt-1 text-xs text-slate-500">{v.desc}</p>
+        {/* ── Milestones: Left-aligned timeline with large year numbers ── */}
+        <section className="py-10">
+          <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-slate-400 mb-8">
+            Milestones
+          </p>
+          <div className="space-y-8">
+            {P.milestones!.map((m) => (
+              <div key={m.year} className="flex gap-6">
+                <span
+                  className="shrink-0 text-3xl font-bold text-slate-200 w-16 text-right"
+                  style={{ fontFamily: serif }}
+                >
+                  {m.year}
+                </span>
+                <div className="pt-2">
+                  <div className="h-px w-8 bg-slate-900 mb-3" />
+                  <p className="text-sm leading-relaxed text-slate-700">{m.text}</p>
+                </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Milestones */}
-        <section className="mb-10 animate-fade-up-delay-4">
-          <SectionTitle>Milestones</SectionTitle>
-          <div className="relative space-y-0">
-            <div className="absolute left-[7px] top-2 bottom-2 w-px bg-slate-200" />
-            {P.milestones.map((m, i) => (
-              <div key={i} className="relative pl-7 pb-6 last:pb-0">
-                <div className="absolute left-0 top-1.5 size-[15px] rounded-full border-2 border-slate-900 bg-white" />
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{m.year}</p>
-                <p className="mt-1 text-sm text-slate-700">{m.text}</p>
+        {/* ── Divider ── */}
+        <div className="h-px bg-slate-300" />
+
+        {/* ── Expertise: Numbered list ── */}
+        <section className="py-10">
+          <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-slate-400 mb-8">
+            Expertise
+          </p>
+          <div className="space-y-6">
+            {P.values!.map((v, i) => (
+              <div key={v.title} className="flex gap-5">
+                <span
+                  className="shrink-0 text-3xl font-bold text-slate-200 w-10 text-right leading-none"
+                  style={{ fontFamily: serif }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="border-l border-slate-200 pl-5 pt-0.5">
+                  <h3 className="text-sm font-semibold text-slate-900">{v.title}</h3>
+                  <p className="mt-1 text-xs text-slate-500">{v.desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Contact */}
-        <section className="mb-10 animate-fade-up-delay-5">
-          <SectionTitle>Contact</SectionTitle>
-          <div className="space-y-3">
-            {P.contacts.map((c) => (
-              <div key={c.label} className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-3 shadow-sm">
-                <span className="text-xs text-slate-400">{c.label}</span>
-                <span className="text-sm font-medium text-slate-900">{c.value}</span>
+        {/* ── Divider ── */}
+        <div className="h-px bg-slate-300" />
+
+        {/* ── Contact: Horizontal layout ── */}
+        <section className="py-10">
+          <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-slate-400 mb-6">
+            Contact
+          </p>
+          <div className="flex flex-wrap gap-x-8 gap-y-3">
+            {P.contacts!.map((c) => (
+              <div key={c.label}>
+                <p className="text-[10px] uppercase tracking-widest text-slate-400">{c.label}</p>
+                <p className="mt-0.5 text-sm font-medium text-slate-900">{c.value}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* CTA */}
-        <a href={`mailto:${P.contacts[0].value}`}
-          className="mb-10 block rounded-xl bg-slate-900 py-4 text-center text-sm font-semibold text-white shadow-lg transition-transform hover:scale-[1.02] animate-fade-up-delay-5">
-          미팅 요청하기
+        {/* ── CTA: Full-width contrasting banner ── */}
+        <a
+          href={`mailto:${P.contacts![0].value}`}
+          aria-label="미팅 요청 이메일 보내기"
+          className="block bg-slate-900 -mx-5 px-5 py-8 text-center transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500"
+        >
+          <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500 mb-2">
+            Let&apos;s Connect
+          </p>
+          <p
+            className="text-2xl font-bold text-white"
+            style={{ fontFamily: serif }}
+          >
+            미팅 요청하기
+          </p>
         </a>
 
-        <footer className="text-center">
-          <div className="mb-4 h-px bg-slate-200" />
-          <p className="text-[10px] tracking-widest text-slate-400">&copy; 2026 {P.company}</p>
+        {/* ── Footer ── */}
+        <footer className="pt-10 text-center">
+          <p className="text-[10px] tracking-widest text-slate-400">
+            &copy; 2026 {P.company}
+          </p>
         </footer>
       </div>
     </main>
-  );
-}
-
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mb-3 flex items-center gap-3">
-      <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400">{children}</h2>
-      <div className="h-px flex-1 bg-slate-200" />
-    </div>
   );
 }
